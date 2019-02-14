@@ -12,18 +12,101 @@ class CalcController {
 
   initialize() {
     this.setDisplayDateTime();
+    this.setLastNumberToDisplay();
   }
 
   clearAll() {
-    this._operation = [];
+
+    this._operation = [0];
+    this.setLastNumberToDisplay(this._operation);
   }
   
   clearEntry() {
     this._operation.pop();
   }
 
-  addOperation(value) {
+  getLastOperation() {
+    return this._operation[this._operation.length-1];
+
+  }
+
+  isOperator(value){
+    return (['+','-','*','%','/','='].indexOf(value)> -1)
+  }
+
+  setLastOperation(value) {
+    this._operation[this._operation.length -1 ] = value;
+  }
+
+  pushOperation(value) {
     this._operation.push(value);
+    if (this._operation.length > 3) {
+      this.calc();
+    }
+  }
+
+  calc() {
+    let last = '';
+
+    if (this._operation.length > 3) {
+      last = this._operation.pop();
+    }
+
+    let result = eval(this._operation.join(""));
+    
+    if(last == '%') {
+      result /= 100;
+      this._operation = [result] 
+    }else {
+
+      this._operation = [result];
+      if (last) this._operation.push(last);
+    }
+    
+    this.setLastNumberToDisplay();
+  }
+
+  setLastNumberToDisplay() {
+    let lastNumber;
+    for(let i = this._operation.length -1; i>=0; i--) {
+      if(!this.isOperator(this._operation[i])){
+        lastNumber = this._operation[i];
+        break;
+      }
+    }
+    
+    if (!lastNumber) lastNumber = 0;
+    this.displayCalc = lastNumber;
+  }
+
+  addOperation(value) {
+    if (isNaN(this.getLastOperation())) {
+
+      if(this.isOperator(value)) {
+
+        this.setLastOperation(value);
+
+      }else if(isNaN(value)) {
+        
+        console.log(value);
+
+      } else {
+
+        this.pushOperation(value)
+        this.setLastNumberToDisplay();
+      }
+    } else {
+      if (this.isOperator(value)) {
+        this.pushOperation(value);
+
+      } else {
+        let newValue = this.getLastOperation().toString() + value.toString();
+        this.setLastOperation(newValue);
+        this.setLastNumberToDisplay();
+      }
+      
+    }
+
     console.log(this._operation, 'here');
     
   }
@@ -43,30 +126,32 @@ class CalcController {
         break;
 
         case 'soma':
-
+          this.addOperation('+');
         break;
-        case 'subtracao':
 
+        case 'subtracao':
+         this.addOperation('-');
         break;
 
         case 'divisao':
-
+          this.addOperation('/');
         break;
 
         case 'multiplicacao':
-
+          this.addOperation('*');
         break;
 
         case 'porcento':
-
+          this.addOperation('%');
         break;
 
         case 'igual':
-
+          this.addOperation('=');
+          this.calc();
         break;
 
-        case 'soma':
-
+        case 'ponto':
+          this.addOperation('.');
         break;
 
         case '0':
