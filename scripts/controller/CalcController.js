@@ -1,5 +1,7 @@
 class CalcController {
   constructor() {
+    this._lastOperator = '';
+    this.lastNumber = '';
     this._operation = [];
     this._locale = 'pt-BR';
     this._displayCalcEl = document.querySelector('#display');
@@ -45,14 +47,19 @@ class CalcController {
     }
   }
 
+  getResult() {
+    return eval(this._operation.join(""));
+  }
+
   calc() {
     let last = '';
 
     if (this._operation.length > 3) {
       last = this._operation.pop();
+      this._lastNumber =  this.getResult();  
     }
 
-    let result = eval(this._operation.join(""));
+    this.getResult();
     
     if(last == '%') {
       result /= 100;
@@ -64,6 +71,32 @@ class CalcController {
     }
     
     this.setLastNumberToDisplay();
+  }
+
+  getLastItem(isOperator = true) {
+    let lastItem;
+    for(let i = this._operation.length -1; i>=0; i--) {
+
+      if (isOperator) {
+
+        if(this.isOperator(this._operation[i])){
+          lastItem = this._operation[i];
+          break;
+        }
+
+      } else {
+
+        if(!this.isOperator(this._operation[i])){
+          lastItem = this._operation[i];
+          break;
+        }
+
+      }
+    }
+    return 
+    
+    if (!lastNumber) lastNumber = 0;
+    this.displayCalc = lastNumber;
   }
 
   setLastNumberToDisplay() {
@@ -232,3 +265,5 @@ class CalcController {
     this._currentDate = value;
   }
 }
+
+window.calculator = new CalcController();
