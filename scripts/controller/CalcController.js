@@ -28,7 +28,7 @@ class CalcController {
     this.setDisplayDateTime();
     this.setLastNumberToDisplay();
     document.querySelectorAll('.btn-ac').forEach(btn => {  
-      btn.addEventListener('dblclick', e => {
+      btn.addEventListener('dblclick', () => {
         this.toggleAudio();   
       })
     })
@@ -83,7 +83,8 @@ class CalcController {
   
           case '%':
             this.addOperation('%');
-  
+          break;
+
           case '=':
             this.calc();
           break;
@@ -160,6 +161,7 @@ class CalcController {
 
   calc() {
     let last = '';
+    let result;
 
     this._lastOperator = this.getLastItem();
     if (this._operation.length < 3 ) {
@@ -277,9 +279,9 @@ class CalcController {
           this.addOperation('*');
         break;
 
-        break;
         case 'porcento':
           this.addOperation('%');
+        break;
 
         case 'igual':
           this.calc();
@@ -323,13 +325,13 @@ class CalcController {
   initButtonsEvents() {
     let buttons = document.querySelectorAll("#buttons > g, #parts > g");
     buttons.forEach((btn) => {
-      this.addEventListenerAll(btn, 'click drag', e => {
+      this.addEventListenerAll(btn, 'click drag', () => {
       let btnValue = btn.className.baseVal.replace("btn-", "");
         this.execBtn(btnValue);
         
       });
       
-      this.addEventListenerAll(btn, "mouseover mouseup mousedown", e => {
+      this.addEventListenerAll(btn, "mouseover mouseup mousedown", () => {
         btn.style.cursor = "pointer";
       });
     });
