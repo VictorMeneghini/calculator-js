@@ -27,11 +27,7 @@ class CalcController {
   initialize() {
     this.setDisplayDateTime();
     this.setLastNumberToDisplay();
-    document.querySelectorAll('.btn-ac').forEach(btn => {  
-      btn.addEventListener('dblclick', () => {
-        this.toggleAudio();   
-      })
-    })
+    this.toggleAudio();
   }
 
   toggleAudio() {
